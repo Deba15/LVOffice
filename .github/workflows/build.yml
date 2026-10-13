@@ -1,0 +1,21 @@
+name: APK építés
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -o LVOffice.zip
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.7"
+      - working-directory: LVOffice
+        run: gradle assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LVOffice-apk
+          path: LVOffice/app/build/outputs/apk/debug/*.apk
